@@ -1,25 +1,28 @@
 import React, { useState } from "react";
 import { Card, Image, Text, Menu, Group, ActionIcon, Rating } from '@mantine/core';
 import { IconBrandAsana, IconCheck } from '@tabler/icons';
-import { getAll, update } from "../BooksAPI";
+import { update } from "../BooksAPI";
+import { Link } from "react-router-dom";
 
-const Book = ({book, setBooks, query, queryFn})=>{
+const Book = ({book, setBooks, books, query, queryFn})=>{
     const [shelves] = useState(["currentlyReading", "wantToRead", "read"])
     const changeShelf = (book, shelf)=>{
         update(book, shelf).then(()=>{
-            query ? queryFn(query):
-            getAll().then(data=>setBooks(data))
+          book.shelf = shelf
+          setBooks([...books.filter(item=>item.id !== book.id), book])
         })
     }
     return(
     <Card shadow="sm" p="lg" radius="md" sx={{height: "max-content"}} >
       <Card.Section>
-        <Image
-          src={book?.imageLinks?.thumbnail}
-          fit={"cover"}
-          height={290}
-          alt={book?.title}
-        />
+        <Link to={`/books/${book.id}`}>
+          <Image
+            src={book?.imageLinks?.thumbnail}
+            fit={"cover"}
+            height={290}
+            alt={book?.title}
+          />
+        </Link>
       </Card.Section>
       <Menu shadow="md" width={200} sx={{position: "absolute", bottom: 165, right: 20}}>
         <Menu.Target>

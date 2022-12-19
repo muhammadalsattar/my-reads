@@ -10,11 +10,11 @@ function Home() {
   const [books, setBooks] = useState([])
   const [scroll] = useWindowScroll();
   useEffect(()=>{
-    getAll().then(books=>setBooks(books))
+    books.length === 0 && getAll().then(books=>setBooks(books))
   }, [setBooks])
-  console.log(books)
   return (
     <>
+
       <Affix position={{ bottom: 20, right: 20 }}>
         <Transition transition="slide-up" mounted={scroll.y >= 0}>
           {(transitionStyles) => (
@@ -30,15 +30,19 @@ function Home() {
           )}
         </Transition>
       </Affix>
+
       <Divider my="xl" label={<Text size={'lg'}>Currently Reading</Text>} />
+
       <Grid gutter={'md'}>
       {books.filter(book=>book.shelf==="currentlyReading").map(book=>(
         <Grid.Col span={4} key={book.title}>
-          <Book book={book} setBooks={setBooks}/>
+          <Book book={book} books={books} setBooks={setBooks}/>
         </Grid.Col>
       ))}
       </Grid>
+
       <Divider my="xl" label={<Text size={'lg'}>Want to Read</Text>} />
+
       <Grid gutter={'md'}>
       {books.filter(book=>book.shelf==="wantToRead").map(book=>(
         <Grid.Col span={4} key={book.title}>
@@ -46,7 +50,9 @@ function Home() {
         </Grid.Col>
       ))}
       </Grid>
+
       <Divider my="xl" label={<Text size={'lg'}>Read</Text>} />
+
       <Grid gutter={'md'}>
       {books.filter(book=>book.shelf==="read").map(book=>(
         <Grid.Col span={4} key={book.title}>
@@ -54,6 +60,7 @@ function Home() {
         </Grid.Col>
       ))}
       </Grid>
+  
     </>
   );
 }
